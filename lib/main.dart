@@ -47,63 +47,53 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Container(
-              margin: EdgeInsets.all(20.0),
-              alignment: Alignment.center,
+      body: Container(
+        margin: EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 10.0),
               child: Text(
-                amount.toString() + ' oz',
-                textAlign: TextAlign.center,
+                "Today's total:",
                 style: TextStyle(
                   color: Colors.blue,
-                  fontSize: 92.0,
+                  fontSize: 24.0,
                 ),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              alignment: Alignment.center,
+              child: Text(
+                amount.toString() + " oz",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 84.0,
+                ),
+              )
+            ),
+            TextField(
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 24.0,
+              ),
+              decoration: InputDecoration(
+                hintText: "Enter amount (oz)"
               ),
             ),
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(5.0),
-                  padding: EdgeInsets.all(5.0),
-                  child: TextField(
-                    textAlign: TextAlign.right,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Enter amount (oz)',
-                      // border: OutlineInputBorder(
-                      //   borderRadius: BorderRadius.circular(5.0),
-                      // ),
-                    ),
-                  ),
+            Container(
+              padding: EdgeInsets.only(top: 10.0),
+              child: RaisedButton(
+                child: Text(
+                  "Drink",
                 ),
+                onPressed: () {},
               ),
-              Container(
-                margin: EdgeInsets.all(5.0),
-                child: RaisedButton(
-                  color: Colors.blue,
-                  child: Text(
-                    'Drink',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () {},
-                )
-              )
-            ],
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.lightBlue,
             )
-          )
-        ],
+          ],
+        ),
       )
     );
   }
