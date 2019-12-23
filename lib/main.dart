@@ -11,21 +11,13 @@ class WaterLoggerApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
       ),
       home: HomePage(title: 'WaterLogger'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -34,67 +26,103 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double amount = 32;
+  double _amount = 0;
+  String _amountText;
+
+  TextEditingController drinkInputAmountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    this._amountText = _buildAmountText(_amount);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colors.white
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
-      ),
-      body: Container(
-        margin: EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Text(
-                "Today's total:",
+        body: Container(
+          margin: EdgeInsets.all(20.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Text(
+                  "Today's total:",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 24.0,
+                  ),
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    _amountText,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 84.0,
+                    ),
+                  )),
+              TextField(
+                controller: drinkInputAmountController,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.right,
                 style: TextStyle(
-                  color: Colors.blue,
                   fontSize: 24.0,
                 ),
+                decoration: InputDecoration(hintText: "Enter amount (oz)"),
               ),
-              alignment: Alignment.centerLeft,
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              alignment: Alignment.center,
-              child: Text(
-                amount.toString() + " oz",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 84.0,
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                child: RaisedButton(
+                  child: Text(
+                    "Drink",
+                  ),
+                  onPressed: () => _handleDrinkInput(),
                 ),
               )
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-              decoration: InputDecoration(
-                hintText: "Enter amount (oz)"
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10.0),
-              child: RaisedButton(
-                child: Text(
-                  "Drink",
-                ),
-                onPressed: () {},
-              ),
-            )
-          ],
-        ),
-      )
-    );
+            ],
+          ),
+        ));
   }
+
+  void _handleDrinkInput() {
+    var inputAmountText = drinkInputAmountController.text;
+
+    if (inputAmountText.isNotEmpty) {
+      var drinkAmount = double.parse(inputAmountText);
+
+      _clearInputAmountField();
+
+      var newAmount = _amount + drinkAmount;
+      var newAmountText = _buildAmountText(newAmount);
+
+      setState(() {
+        this._amount = newAmount;
+        this._amountText = newAmountText;
+      });
+    }
+  }
+
+  String _buildAmountText(double amount) {
+    String displayAmount;
+
+    if (amount > 1000) {
+      displayAmount = (amount / 1000.0).toStringAsFixed(1) + "k";
+    } else {
+      displayAmount = amount.toStringAsFixed(1);
+    }
+
+    return displayAmount + ' oz';
+  }
+
+  _clearInputAmountField() => drinkInputAmountController.text = '';
 }
